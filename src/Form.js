@@ -4,16 +4,15 @@ import {isEmpty, noop} from 'lodash';
 
 class Field extends Component {
   render() {
-    const {id, label, type, focus, onChange=noop} = this.props;
+    const {id, label, type, focus, onChange=noop, value} = this.props;
     return (
       <dl>
         <dt className ='label'><label htmlFor={id}>{label}</label></dt>
         <dd className ='field'>
           {type === 'textarea'
-            ? <textarea
-                ref={x => x && focus ? x.focus() : null}
-                rows='9' cols='58' type="text" id={id} />
+            ? <textarea rows='9' cols='58' type="text" id={id} />
             : <input
+                value={value}
                 onChange={e => onChange(e.target.value)}
                 ref={x => x && focus ? x.focus() : null}
                 className='input' size='50' type="text" id={id} />}
@@ -63,6 +62,7 @@ class Form extends Component {
     this.state = {
       name: '',
       email: '',
+      phone: '',
       isNameFocused: false,
       isEmailFocused: false,
       links: ['name', 'email'],
@@ -89,21 +89,27 @@ class Form extends Component {
   }
 
   render() {
-    const {links} = this.state;
+    const {links, name, email, phone} = this.state;
     return (
       <div className='main'>
         <div className='left'>
           <Field
+            value={name}
             onChange={value => this._onFieldChange('name', value)}
             id='name'
             label='Имя:'
             focus={this.state.isNameFocused}/>
           <Field
+            value={email}
             onChange={value => this._onFieldChange('email', value)}
             id='email'
             label='Эл. почта:'
             focus={this.state.isEmailFocused} />
-          <Field id='phone' label='Телефон:' />
+          <Field
+            onChange={value => this._onFieldChange('phone', value)}
+            value={phone}
+            id='phone'
+            label='Телефон:' />
           <Field type='textarea' id='resume' label='Рассказ о себе:' />
           <Actions links={links} onClick={this._onLinkClick.bind(this)}/>
         </div>
