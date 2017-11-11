@@ -41,7 +41,7 @@ class Actions extends Component {
   _onClick(link) { this.props.onClick(link); }
   _renderLink(link, i, last) {
     return (
-      <span>
+      <span key={link}>
         <span className='link' key={i}
           onClick={() => this._onClick(link)} >
           {link === 'name' ? 'имя' : 'эл. почта'}
