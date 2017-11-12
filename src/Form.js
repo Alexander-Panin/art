@@ -14,7 +14,7 @@ class Field extends Component {
         <dd className ='field'>
           {type === 'textarea'
             ? <textarea
-                placeholder="например, наркотики💉 , секс🍸 и рок-н-ролл🎸 "
+                placeholder="например, наркотики💉 , секс🙈 и рок-н-ролл🎸 "
                 onChange={e => onChange(e.target.value, e.target.selectionStart)}
                 value={value}
                 rows='9' cols='58' type="text" id={id} />
