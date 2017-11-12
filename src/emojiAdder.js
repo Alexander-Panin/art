@@ -21,10 +21,10 @@ export function emojiAdder(prev = 0) {
 
 function findWord(text, pos) {
   let [f, l] = [pos, pos];
-  if (text.charCodeAt(pos) === 32 && f !== 0) {f--;}
+  if (text[pos] === ' ' && f !== 0) {f--;}
   const len = text.length;
-  while(f !== 0 && text.charCodeAt(f) !== 32) f--;
-  while(l !== len && text.charCodeAt(l) !== 32) l++;
+  while(f !== 0 && text[f] !== ' ') f--;
+  while(l !== len && text[l] !== ' ') l++;
   if (f !== 0) f++;
   return {f, l};
 }
