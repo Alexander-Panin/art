@@ -6,6 +6,10 @@
   padding-top: 1.8px;
 }
 
+.arealabel {
+  padding-top: 2.4px;
+}
+
 .link {
   color: #0089ff;
   border-bottom: 1px dashed rgba(0,137,255,.3);

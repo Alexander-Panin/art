@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import './Form.css';
 import {isEmpty, noop} from 'lodash';
+import {emojiAdder} from './emojiAdder';
 
 class Field extends Component {
   render() {
     const {id, label, type, focus, onChange=noop, value} = this.props;
     return (
       <dl>
-        <dt className ='label'><label htmlFor={id}>{label}</label></dt>
+        <dt className ={type === 'textarea' ? 'label arealabel': 'label'}>
+          <label htmlFor={id}>{label}</label>
+        </dt>
         <dd className ='field'>
           {type === 'textarea'
-            ? <textarea rows='9' cols='58' type="text" id={id} />
-            : <input
+            ? <textarea
+                placeholder="например, наркотики💉 , секс🍸 и рок-н-ролл🎸 "
+                onChange={e => onChange(e.target.value, e.target.selectionStart)}
                 value={value}
-                onChange={e => onChange(e.target.value)}
+                rows='9' cols='58' type="text" id={id} />
+            : <input
+                onChange={e => onChange(e.target.value, e.target.selectionStart)}
+                value={value}
                 ref={x => x && focus ? x.focus() : null}
                 className='input' size='50' type="text" id={id} />}
         </dd>
@@ -63,10 +70,12 @@ class Form extends Component {
       name: '',
       email: '',
       phone: '',
+      resume: '',
       isNameFocused: false,
       isEmailFocused: false,
       links: ['name', 'email'],
     };
+    this.emojiAdder = emojiAdder();
   }
 
   _getLinks(changed) {
@@ -78,10 +87,10 @@ class Form extends Component {
     ].filter(Boolean);
   }
 
-  _onFieldChange(field, value) {
+  _onFieldChange(field, value, pos) {
     const links = this._getLinks({[field]: value});
     this.setState({
-      [field]: value,
+      [field]: this.emojiAdder(value, pos),
       links,
       isNameFocused: field === 'name',
       isEmailFocused: field === 'email',
@@ -89,28 +98,33 @@ class Form extends Component {
   }
 
   render() {
-    const {links, name, email, phone} = this.state;
+    const {links, name, email, phone, resume} = this.state;
     return (
       <div className='main'>
         <div className='left'>
           <Field
             value={name}
-            onChange={value => this._onFieldChange('name', value)}
+            onChange={(value, pos) => this._onFieldChange('name', value, pos)}
             id='name'
             label='Имя:'
             focus={this.state.isNameFocused}/>
           <Field
             value={email}
-            onChange={value => this._onFieldChange('email', value)}
+            onChange={(value, pos) => this._onFieldChange('email', value, pos)}
             id='email'
             label='Эл. почта:'
             focus={this.state.isEmailFocused} />
           <Field
-            onChange={value => this._onFieldChange('phone', value)}
+            onChange={(value, pos) => this._onFieldChange('phone', value, pos)}
             value={phone}
             id='phone'
             label='Телефон:' />
-          <Field type='textarea' id='resume' label='Рассказ о себе:' />
+          <Field
+            value={resume}
+            onChange={(value, pos) => this._onFieldChange('resume', value, pos)}
+            type='textarea'
+            id='resume'
+            label='Рассказ о себе:' />
           <Actions links={links} onClick={this._onLinkClick.bind(this)}/>
         </div>
         <div></div>
