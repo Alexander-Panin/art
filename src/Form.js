@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './Form.css';
-import {isEmpty, noop} from 'lodash';
+import {isEmpty, noop, trim} from 'lodash';
 import {emojiAdder} from './emojiAdder';
 
 class Field extends Component {
   render() {
-    const {id, label, type, focus, onChange=noop, value} = this.props;
+    const {id, label, type, focus, value, onChange=noop} = this.props;
     return (
       <dl>
         <dt className ={type === 'textarea' ? 'label arealabel': 'label'}>
@@ -14,15 +14,15 @@ class Field extends Component {
         <dd className ='field'>
           {type === 'textarea'
             ? <textarea
-                placeholder="например, наркотики💉 , секс🙈 и рок-н-ролл🎸 "
+                placeholder="Например, секс🙈 & наркотики💉 & рок-н-ролл🎸 "
                 onChange={e => onChange(e.target.value, e.target.selectionStart)}
                 value={value}
-                rows='9' cols='58' type="text" id={id} />
+                rows='9' cols='53' type="text" id={id} />
             : <input
                 onChange={e => onChange(e.target.value, e.target.selectionStart)}
                 value={value}
                 ref={x => x && focus ? x.focus() : null}
-                className='input' size='50' type="text" id={id} />}
+                className='input' size='45' type="text" id={id} />}
         </dd>
       </dl>
     );
@@ -37,7 +37,7 @@ class Actions extends Component {
         <dd className ='field'>
           <button className='button'>Отправить</button>
           {!isEmpty(links)
-            ? <span className='warning'> Осталось заполнить: {this._renderLinks(links)}</span>
+            ? <span className='warning'>Осталось заполнить: {this._renderLinks(links)}</span>
             : ''}
         </dd>
       </dl>
@@ -78,11 +78,11 @@ class Form extends Component {
     this.emojiAdder = emojiAdder();
   }
 
-  _getLinks(changed) {
+  _getLinks(changedData) {
     const {name, email} = this.state;
-    const obj = Object.assign({name, email}, changed);
+    const obj = Object.assign({name, email}, changedData);
     return [
-      isEmpty(obj.name) ? 'name' : null,
+      isEmpty(trim(obj.name)) ? 'name' : null,
       !/\S+@\S+\.\S+/.test(obj.email) ? 'email' : null,
     ].filter(Boolean);
   }
